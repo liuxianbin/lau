@@ -28,8 +28,9 @@ import "gitee.com/lauj/lau"
 func main() {
     l := lau.Default()
     l.Static("/static", "static")
+    l.LoadHTMLGlob("views/*")
     l.GET("/hello/:one/:two/info", func(c *lau.Context) {
-        c.HTML(200, "views/two.tmpl", nil)
+        c.HTML(200, "two.tmpl", nil)
     })
     l.GET("/hello", func(c *lau.Context) {
         c.String(200, "%v", "hello")
