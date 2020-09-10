@@ -7,8 +7,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"path/filepath"
-	"strings"
 )
 
 type Context struct {
@@ -58,10 +56,6 @@ func (c *Context) String(code int, format string, val string) {
 }
 
 func (c *Context) HTML(code int, filename string, obj interface{}) {
-	if strings.Index(filename, "/") > 0 {
-		c.LoadHTMLFiles(filename)
-		filename = filepath.Base(filename)
-	}
 	c.SetHeader("content-type", "text/html")
 	c.SetStatus(code)
 	if err := c.HTMLTemplate.ExecuteTemplate(c.W, filename, obj); err != nil {
