@@ -18,7 +18,9 @@ type Engine struct {
 func (e *Engine) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	c := NewContext(w, r)
 	c.Engine = e
-	e.handler(c)
+	c.mHandlers = e.mHandlers
+	c.mHandlers = append(c.mHandlers, e.handler)
+	c.Next()
 }
 
 // New returns a new initialized Engine
@@ -27,6 +29,12 @@ func New() *Engine {
 		Route:        NewRoute(),
 		HTMLTemplate: nil,
 	}
+}
+
+func Default() *Engine {
+	l := New()
+	l.Use(Recovery())
+	return l
 }
 
 func (e *Engine) Run(addr string) {

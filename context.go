@@ -19,10 +19,13 @@ type Context struct {
 	Code   int
 	*Engine
 	Params map[string]string
+	// middleware
+	mHandlers []handleFunc
+	mIndex    int
 }
 
 func NewContext(w http.ResponseWriter, r *http.Request) *Context {
-	return &Context{W: w, R: r, Method: r.Method, Path: r.URL.Path}
+	return &Context{W: w, R: r, Method: r.Method, Path: r.URL.Path, mIndex: -1}
 }
 
 func (c *Context) JSON(code int, obj interface{}) {
@@ -32,6 +35,11 @@ func (c *Context) JSON(code int, obj interface{}) {
 	if err := encoder.Encode(obj); err != nil {
 		http.Error(c.W, err.Error(), 500)
 	}
+}
+
+func (c *Context) Error(code int, err interface{}) {
+	c.Code = code
+	http.Error(c.W, fmt.Sprintf("%s\n", err), code)
 }
 
 func (c *Context) SetStatus(code int) {
@@ -65,4 +73,20 @@ func (c *Context) HTML(code int, filename string, obj interface{}) {
 func (c *Context) Param(k string) string {
 	v, _ := c.Params[k]
 	return v
+}
+
+func (c *Context) FormValue(k string) string {
+	return c.R.FormValue(k)
+}
+
+func (c *Context) PostFormValue(k string) string {
+	return c.R.PostFormValue(k)
+}
+
+func (c *Context) Next() {
+	c.mIndex++
+	for ; c.mIndex < len(c.mHandlers); {
+		c.mHandlers[c.mIndex](c)
+		c.mIndex++
+	}
 }

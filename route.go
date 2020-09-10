@@ -11,12 +11,14 @@ import (
 type handleFunc func(*Context)
 
 type Route struct {
-	handlers map[string]handleFunc
-	trees    map[string]*node
+	// read only after startup
+	trees map[string]*node
+	// middleware
+	mHandlers []handleFunc
 }
 
 func NewRoute() *Route {
-	return &Route{handlers: make(map[string]handleFunc), trees: make(map[string]*node)}
+	return &Route{trees: make(map[string]*node)}
 }
 
 func (r *Route) GET(path string, handler handleFunc) {
@@ -56,6 +58,11 @@ func (r *Route) handler(c *Context) {
 	} else {
 		c.String(http.StatusNotFound, "404 NOT FOUND: %s\n", c.Path)
 	}
+}
+
+// middleware
+func (r *Route) Use(f handleFunc) {
+	r.mHandlers = append(r.mHandlers, f)
 }
 
 // node type
