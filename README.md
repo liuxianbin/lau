@@ -1,6 +1,6 @@
 # Lau Web Framework
 
-Lau is a web framework written in Golang.
+A Simple Golang Web Framework
 
 
 ## Installation

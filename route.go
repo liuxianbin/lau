@@ -30,6 +30,9 @@ func (r *Route) POST(path string, handler handleFunc) {
 }
 
 func (r *Route) addRoute(method, path string, handler handleFunc) {
+	if len(strings.Trim(path, " ")) == 0 {
+		panic("error: the path can not be empty")
+	}
 	parts := splitPattern(path)
 	root := r.trees[method]
 	if root == nil {
@@ -82,6 +85,9 @@ type node struct {
 
 //split url path into slice
 func splitPattern(pattern string) []string {
+	if pattern == "/" {
+		return []string{"/"}
+	}
 	parts := make([]string, 0)
 	for _, item := range strings.Split(strings.TrimLeft(pattern, "/"), "/") {
 		if item != "" {
