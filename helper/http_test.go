@@ -1,24 +1,21 @@
 package helper
 
 import (
-	"fmt"
 	url2 "net/url"
 	"testing"
 )
 
 func TestHttpDo(t *testing.T) {
-	url := "http://www.01happy.com/demo/accept.php"
+	url := "https://aip.baidubce.com/rpc/2.0/nlp/v1/topic"
 	data := url2.Values{
-		"lang": {"golang"},
-		"name": {"lau"},
+		"name": {"123"},
 	}
-	header := map[string]string{
-		"cookie": "name=lau;lang=golang",
-	}
-	fmt.Println(data.Encode())
-	content, err := HttpDo("POST", url, data, header)
+	//header := map[string]string{
+	//	"cookie": "name=lau;lang=golang",
+	//}
+	//content, err := HttpPost(url, data)
+	_, err := HttpDo("POST", url, data, nil)
 	if err != nil {
 		t.Error(err)
 	}
-	fmt.Println(string(content))
 }

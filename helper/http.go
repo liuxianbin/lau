@@ -37,7 +37,8 @@ func HttpGet(url string) ([]byte, error) {
 }
 
 func HttpDo(method, url string, data url.Values, header map[string]string) ([]byte, error) {
-	client := &http.Client{}
+	//tr := &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: false}}
+	//client := &http.Client{Transport: tr}
 	req, err := http.NewRequest(method, url, strings.NewReader(data.Encode()))
 	if method == "POST" {
 		req.Header.Set("content-type", "application/x-www-form-urlencoded")
@@ -45,7 +46,7 @@ func HttpDo(method, url string, data url.Values, header map[string]string) ([]by
 	for k, v := range header {
 		req.Header.Set(k, v)
 	}
-	resp, err := client.Do(req)
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
