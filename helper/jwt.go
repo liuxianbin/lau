@@ -46,7 +46,7 @@ type jwt struct {
 	header jwtData
 }
 
-func newAccess(key string) *jwt {
+func newJwt(key string) *jwt {
 	return &jwt{key: key, header: jwtData{"alg": "sha256"}}
 }
 
@@ -104,7 +104,7 @@ func VerifyJWT(key, token string) (jwtData, bool) {
 			return nil, false
 		}
 	}
-	a := newAccess(key)
+	a := newJwt(key)
 	if a.signature(tokens[0]+"."+tokens[1]) != tokens[2] {
 		return nil, false
 	}
@@ -113,6 +113,6 @@ func VerifyJWT(key, token string) (jwtData, bool) {
 
 // JWT
 func JWT(key string, payload jwtData) string {
-	a := newAccess(key)
+	a := newJwt(key)
 	return a.getToken(payload)
 }
