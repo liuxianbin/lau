@@ -1,3 +1,6 @@
+// Copyright (c) 2020 Lau All rights reserved.
+// Use of this source code is governed by MIT License that can be found in the LICENSE file.
+// Author: Lau <lauj@foxmail.com>
 package lau
 
 import (
