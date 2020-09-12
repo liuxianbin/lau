@@ -36,11 +36,14 @@ func HttpGet(url string) ([]byte, error) {
 	return content, nil
 }
 
-func HttpDo(method, url string, data url.Values) ([]byte, error) {
+func HttpDo(method, url string, data url.Values, header map[string]string) ([]byte, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest(method, url, strings.NewReader(data.Encode()))
 	if method == "POST" {
 		req.Header.Set("content-type", "application/x-www-form-urlencoded")
+	}
+	for k, v := range header {
+		req.Header.Set(k, v)
 	}
 	resp, err := client.Do(req)
 	if err != nil {
