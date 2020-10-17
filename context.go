@@ -20,6 +20,7 @@ type Context struct {
 	// middleware
 	mHandlers []handleFunc
 	mIndex    int
+	attr      map[string]interface{}
 }
 
 func NewContext(w http.ResponseWriter, r *http.Request) *Context {
@@ -83,4 +84,12 @@ func (c *Context) Next() {
 		c.mHandlers[c.mIndex](c)
 		c.mIndex++
 	}
+}
+
+func (c *Context) Set(k string, v interface{}) {
+	c.attr[k] = v
+}
+
+func (c *Context) Get(k string) interface{} {
+	return c.attr[k]
 }
